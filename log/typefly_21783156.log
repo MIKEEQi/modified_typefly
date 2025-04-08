@@ -1,0 +1,48 @@
+Conda environment: /home/qsun28/anaconda3/envs/poc/bin/python
+=> Starting typefly-yolo...
+singularity run --nv \
+	--bind /home/qsun28/code/poc/typefly/TypeFly-tello:/workspace \
+	--env ROOT_PATH="/workspace" \
+	--env ROUTER_SERVICE_PORT="50049" \
+	--env YOLO_SERVICE_PORT="50050,50051,50052" \
+	./sif/typefly-yolo_0.1.sif &
+bash ./serving/webui/install_requirements.sh
+Package flask is not installed. Installing...
+Requirement already satisfied: flask in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (3.1.0)
+Requirement already satisfied: Werkzeug>=3.1 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from flask) (3.1.3)
+Requirement already satisfied: Jinja2>=3.1.2 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from flask) (3.1.5)
+Requirement already satisfied: itsdangerous>=2.2 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from flask) (2.2.0)
+Requirement already satisfied: click>=8.1.3 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from flask) (8.1.8)
+Requirement already satisfied: blinker>=1.9 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from flask) (1.9.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from Jinja2>=3.1.2->flask) (2.1.5)
+Package gradio is already installed.
+Package grpcio-tools is already installed.
+Package aiohttp is already installed.
+Package djitellopy is already installed.
+Package openai is already installed.
+Package opencv-python is already installed.
+Package numpy is already installed.
+Package pillow is already installed.
+Package filterpy is already installed.
+Package matplotlib is already installed.
+Starting YoloService at port 50050
+Starting YoloService at port 50052
+Starting YoloService at port 50051
+Package torch is already installed.
+cd ./proto && bash generate.sh
+python3 ./serving/webui/typefly.py --use_virtual_robot
+GPU memory usage: 275141632
+GPU memory usage: 275141632
+GPU memory usage: 275141632
+[10:45:10.344] [C] Start virtual drone...
+Traceback (most recent call last):
+  File "/home/qsun28/code/poc/typefly/TypeFly-tello/./serving/webui/typefly.py", line 147, in <module>
+    typefly = TypeFly(robot_type, use_http=args.use_http)
+  File "/home/qsun28/code/poc/typefly/TypeFly-tello/./serving/webui/typefly.py", line 29, in __init__
+    self.llm_controller = LLMController(robot_type, use_http, self.message_queue)
+  File "/home/qsun28/code/poc/typefly/TypeFly-tello/controller/llm_controller.py", line 55, in __init__
+    self.planner = LLMPlanner(robot_type)
+  File "/home/qsun28/code/poc/typefly/TypeFly-tello/controller/llm_planner.py", line 32, in __init__
+    with open(os.path.join(CURRENT_DIR, f"./assets/{type_folder_name}/plan_examples_cot.txt"), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/home/qsun28/code/poc/typefly/TypeFly-tello/controller/./assets/tello/plan_examples_cot.txt'
+make: *** [Makefile:41: typefly] Error 1

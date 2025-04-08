@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: ultralytics/ultralytics:latest
+
+%post
+    apt update
+    apt install -y nano wget
+    pip install grpcio-tools lapx
+
+    # Copy project files
+    cp -r /workspace /workspace
+
+    # Set working directory
+    cd /workspace/proto
+    bash ./generate.sh
+
+%runscript
+    exec python /workspace/serving/yolo/yolo_service.py

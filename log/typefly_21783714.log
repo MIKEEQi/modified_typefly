@@ -1,0 +1,66 @@
+Conda environment: /home/qsun28/anaconda3/envs/poc/bin/python
+=> Starting typefly-yolo...
+singularity run --nv \
+	--bind /home/qsun28/code/poc/typefly/TypeFly-tello:/workspace \
+	--env ROOT_PATH="/workspace" \
+	--env ROUTER_SERVICE_PORT="50049" \
+	--env YOLO_SERVICE_PORT="50050,50051,50052" \
+	./sif/typefly-yolo_0.1.sif &
+bash ./serving/webui/install_requirements.sh
+Package flask is not installed. Installing...
+Requirement already satisfied: flask in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (3.1.0)
+Requirement already satisfied: Werkzeug>=3.1 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from flask) (3.1.3)
+Requirement already satisfied: Jinja2>=3.1.2 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from flask) (3.1.5)
+Requirement already satisfied: itsdangerous>=2.2 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from flask) (2.2.0)
+Requirement already satisfied: click>=8.1.3 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from flask) (8.1.8)
+Requirement already satisfied: blinker>=1.9 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from flask) (1.9.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages (from Jinja2>=3.1.2->flask) (2.1.5)
+Package gradio is already installed.
+Package grpcio-tools is already installed.
+Package aiohttp is already installed.
+Package djitellopy is already installed.
+Package openai is already installed.
+Package opencv-python is already installed.
+Package numpy is already installed.
+Package pillow is already installed.
+Package filterpy is already installed.
+Package matplotlib is already installed.
+Starting YoloService at port 50050
+Starting YoloService at port 50052
+Starting YoloService at port 50051
+Package torch is already installed.
+cd ./proto && bash generate.sh
+python3 ./serving/webui/typefly.py --use_virtual_robot
+GPU memory usage: 275141632
+GPU memory usage: 275141632
+GPU memory usage: 275141632
+/home/qsun28/anaconda3/envs/poc/lib/python3.10/site-packages/gradio/components/chatbot.py:291: UserWarning: The 'tuples' format for chatbot messages is deprecated and will be removed in a future version of Gradio. Please set type='messages' instead, which uses openai-style 'role' and 'content' keys.
+  warnings.warn(
+[ WARN:0@2.736] global cap_v4l.cpp:913 open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[ERROR:0@2.736] global obsensor_uvc_stream_channel.cpp:158 getStreamChannelGroup Camera index out of range
+Exception in thread Thread-7 (capture_loop):
+Traceback (most recent call last):
+  File "/home/qsun28/anaconda3/envs/poc/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/home/qsun28/anaconda3/envs/poc/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/qsun28/code/poc/typefly/TypeFly-tello/controller/llm_controller.py", line 206, in capture_loop
+[11:03:12.489] [C] Start virtual drone...
+[11:03:13.168] [C] Connecting to robot...
+[11:03:13.168] [C] Starting robot...
+-> Moving up 25 cm
+[11:03:14.169] [C] Starting stream...
+[11:03:14.170] [C] Start capture loop...
+ * Serving Flask app 'typefly'
+    frame_reader = self.drone.get_frame_reader()
+  File "/home/qsun28/code/poc/typefly/TypeFly-tello/controller/virtual_robot_wrapper.py", line 48, in get_frame_reader
+ * Debug mode: on
+which: no node in (/data/apps/linux-centos8-cascadelake/gcc-9.3.0/git-2.28.0-uh6lz2zi2m3rwkfujclkz2qrtm6awu6s/bin:/data/apps/linux-centos8-cascadelake/gcc-9.3.0/openmpi-3.1.6-rk3nyoehbq3pke4zy4hn7unns3ujtutx/bin:/data/apps/linux-centos8-cascadelake/gcc-9.2.0/gcc-9.3.0-bnvby67rgbqevwsd264rgz44xucnkhpm/bin:/home/qsun28/anaconda3/envs/poc/bin:/home/qsun28/anaconda3/condabin:/home/qsun28/.local/bin:/home/qsun28/bin:/data/apps/extern/spack_on/gcc/9.3.0/lua/5.4.4-njaqalolk5jksjkvmuvz5dz3hsfkzofi/bin:/data/apps/helpers:/cm/shared/apps/slurm/current/sbin:/cm/shared/apps/slurm/current/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin)
+    return FrameReader(self.cap)
+  File "/home/qsun28/code/poc/typefly/TypeFly-tello/controller/virtual_robot_wrapper.py", line 10, in __init__
+    raise ValueError("Could not open video device")
+ValueError: Could not open video device
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://localhost:50000
+[33mPress CTRL+C to quit[0m
+slurmstepd: error: *** JOB 21783714 ON gpu02 CANCELLED AT 2025-03-04T11:58:41 ***
