@@ -17,9 +17,11 @@ class LLMPlanner():
         self.model_name = DEEPSEEK
         self.task = task
 
-        type_folder_name = 'tello'
+        type_folder_name = 'airsim'
         if robot_type == RobotType.GEAR:
             type_folder_name = 'gear'
+        elif robot_type == RobotType.TELLO:
+            type_folder_name = 'tello'
 
         # read prompt from txt
         with open(os.path.join(CURRENT_DIR, f"./assets/{type_folder_name}/prompt_plan.txt"), "r") as f:

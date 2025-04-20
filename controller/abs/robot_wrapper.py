@@ -5,6 +5,7 @@ class RobotType(Enum):
     VIRTUAL = 0
     TELLO = 1
     GEAR = 2
+    AIRSIM = 3
 
 class RobotWrapper(ABC):
     movement_x_accumulator = 0

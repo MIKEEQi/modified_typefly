@@ -1,7 +1,7 @@
-.PHONY: stop, start, remove, open, build, clean
+.PHONY: stop, start, remove, open, build
 
 SERVICE_LIST = router yolo
-SIF_DIR = ./sif
+GPU_OPTIONS=--gpus all
 
 validate_service:
 ifeq ($(filter $(SERVICE),$(SERVICE_LIST)),)
@@ -11,31 +11,35 @@ endif
 
 stop: validate_service
 	@echo "=> Stopping typefly-$(SERVICE)..."
-	@pkill -f "typefly-$(SERVICE)_0.1.sif" || true
+	@-docker stop -t 0 typefly-$(SERVICE) > /dev/null 2>&1
+	@-docker rm -f typefly-$(SERVICE) > /dev/null 2>&1
 
 start: validate_service
+	@make stop SERVICE=$(SERVICE)
 	@echo "=> Starting typefly-$(SERVICE)..."
-	singularity run --nv \
-		--bind $(PWD):/workspace \
-		--env ROOT_PATH="/workspace" \
-		--env ROUTER_SERVICE_PORT="50049" \
-		--env YOLO_SERVICE_PORT="50050,50051,50052" \
-		$(SIF_DIR)/typefly-$(SERVICE)_0.1.sif &
+	docker run -td --privileged --net=host $(GPU_OPTIONS) --ipc=host \
+		--env-file ./docker/env.list \
+    	--name="typefly-$(SERVICE)" typefly-$(SERVICE):0.1
 
 remove: validate_service
 	@echo "=> Removing typefly-$(SERVICE)..."
-	@rm -f $(SIF_DIR)/typefly-$(SERVICE).sif
+	@-docker image rm -f typefly-$(SERVICE):0.1  > /dev/null 2>&1
+	@-docker rm -f typefly-$(SERVICE) > /dev/null 2>&1
 
 open: validate_service
-	@echo "=> Opening shell in typefly-$(SERVICE)..."
-	singularity shell --nv --bind $(PWD):/app $(SIF_DIR)/typefly-$(SERVICE).sif
+	@echo "=> Opening bash in typefly-$(SERVICE)..."
+	@docker exec -it typefly-$(SERVICE) bash
 
 build: validate_service
 	@echo "=> Building typefly-$(SERVICE)..."
-	@mkdir -p $(SIF_DIR)
-	singularity build --fakeroot $(SIF_DIR)/typefly-$(SERVICE)_0.1.sif docker-daemon://typefly-$(SERVICE):0.1
+	@make stop SERVICE=$(SERVICE)
+	@make remove SERVICE=$(SERVICE)
+	@echo -n "=>"
+	docker build -t typefly-$(SERVICE):0.1 -f ./docker/$(SERVICE)/Dockerfile .
+	@echo -n "=>"
+	@make start SERVICE=$(SERVICE)
 
 typefly:
 	bash ./serving/webui/install_requirements.sh
 	cd ./proto && bash generate.sh
-	python3 ./serving/webui/typefly.py --use_virtual_robot
+	python3 ./serving/webui/typefly.py

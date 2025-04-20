@@ -10,6 +10,7 @@ from .yolo_client import YoloClient
 from .yolo_grpc_client import YoloGRPCClient
 from .tello_wrapper import TelloWrapper
 from .virtual_robot_wrapper import VirtualRobotWrapper
+from.airsim_wrapper import AirSimWrapper
 from .abs.robot_wrapper import RobotWrapper
 from .vision_skill_wrapper import VisionSkillWrapper
 from .llm_planner import LLMPlanner
@@ -50,9 +51,12 @@ class LLMController():
                 print_t("[C] Start Gear robot car...")
                 from .gear_wrapper import GearWrapper
                 self.drone: RobotWrapper = GearWrapper()
-            case _:
+            case RobotType.VIRTUAL:
                 print_t("[C] Start virtual drone...")
                 self.drone: RobotWrapper = VirtualRobotWrapper()
+            case RobotType.AIRSIM:
+                print_t("[C] Start Airsim drone...")
+                self.drone: RobotWrapper = AirSimWrapper()
 
         self.planner = LLMPlanner(robot_type, task=self.task)
 

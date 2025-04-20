@@ -24,10 +24,10 @@ class LLMWrapper:
 
         self.deepseek_client = openai.OpenAI(
             base_url='https://api.deepseek.com',
-            api_key='api'
+            api_key='sk-2d9d0f32e6bf4965a0bf998b1e5d5985'
         )
 
-    def request(self, prompt, model_name=GPT4, stream=False, task='typefly') -> str | Stream[ChatCompletion.ChatCompletionChunk]:
+    def request(self, prompt, model_name=DEEPSEEK, stream=False, task='typefly') -> str | Stream[ChatCompletion.ChatCompletionChunk]:
         if model_name == LLAMA3:
             client = self.llama_client
         elif model_name == GPT4 or model_name==GPT3:

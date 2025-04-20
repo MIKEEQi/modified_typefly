@@ -27,12 +27,12 @@ class TypeFly:
             os.makedirs(self.cache_folder)
         self.message_queue = queue.Queue()
         self.message_queue.put(self.cache_folder)
-        self.llm_controller = LlavaController(robot_type, use_http, self.message_queue)
+        self.llm_controller = LLMController(robot_type, use_http, self.message_queue)
         self.system_stop = False
         self.ui = gr.Blocks(title="TypeFly")
         self.asyncio_loop = asyncio.get_event_loop()
-        self.use_llama3 = False
-        self.use_llava = True
+        # self.use_llama3 = False
+        # self.use_llava = True
         default_sentences = [
             "Find something I can eat.",
             "What you can see?",
@@ -47,17 +47,17 @@ class TypeFly:
             # TODO: Add checkbox to switch between llama3 and gpt4
             # gr.Checkbox(label='Use llama3', value=False).select(self.checkbox_llama3)
 
-    def checkbox_llama3(self):
-        if self.use_llava:
-            return
+    # def checkbox_llama3(self):
+    #     if self.use_llava:
+    #         return
         
-        self.use_llama3 = not self.use_llama3
-        if self.use_llama3:
-            print_t(f"Switch to llama3")
-            self.llm_controller.planner.set_model(LLAMA3)
-        else:
-            print_t(f"Switch to gpt4")
-            self.llm_controller.planner.set_model(GPT4)
+    #     self.use_llama3 = not self.use_llama3
+    #     if self.use_llama3:
+    #         print_t(f"Switch to llama3")
+    #         self.llm_controller.planner.set_model(LLAMA3)
+    #     else:
+    #         print_t(f"Switch to gpt4")
+    #         self.llm_controller.planner.set_model(GPT4)
 
     def process_message(self, message, history):
         print_t(f"[S] Receiving task description: {message}")
@@ -142,12 +142,16 @@ if __name__ == "__main__":
     parser.add_argument('--use_virtual_robot', action='store_true')
     parser.add_argument('--use_http', action='store_true')
     parser.add_argument('--gear', action='store_true')
+    parser.add_argument('--tello', action='store_true')
 
     args = parser.parse_args()
-    robot_type = RobotType.TELLO
+    robot_type = RobotType.AIRSIM
     if args.use_virtual_robot:
         robot_type = RobotType.VIRTUAL
     elif args.gear:
         robot_type = RobotType.GEAR
+    elif args.tello:
+        robot_type = RobotType.TELLO
+    print(f'RobotType: {robot_type}')
     typefly = TypeFly(robot_type, use_http=args.use_http)
     typefly.run()

@@ -156,3 +156,12 @@ class TelloWrapper(RobotWrapper):
             print('[OK]')
             return True
         return False
+    
+    def speed_up(self, degree: int) -> bool:
+        pass
+
+    def drop_goods(self, finish: int) -> bool:
+        pass
+
+    def carry_goods(self, finish: int) -> bool:
+        pass
