@@ -13,11 +13,10 @@ from .abs.robot_wrapper import RobotWrapper
 from .utils import print_t
 import traceback
 
-MOVEMENT_MIN = 20
-MOVEMENT_MAX = 300
+MOVEMENT_MIN = 200
+MOVEMENT_MAX = 1000
 
-SCENE_CHANGE_DISTANCE = 120
-SCENE_CHANGE_ANGLE = 90
+SCENE_CHANGE_DISTANCE = 300
 
 DEFAULT_SPEED = 5
 
@@ -147,6 +146,7 @@ class AirSimWrapper(RobotWrapper):
 
     def move_forward(self, distance: int, speed=DEFAULT_SPEED) -> Tuple[bool, bool]:
         # AirSim uses meters, convert cm to meters
+        distance = cap_distance(distance)
         distance_m = distance / 100.0
         current_pose = self.client.simGetVehiclePose().position
         target_x = current_pose.x_val + distance_m
@@ -155,6 +155,7 @@ class AirSimWrapper(RobotWrapper):
         return True, distance > SCENE_CHANGE_DISTANCE
 
     def move_backward(self, distance: int, speed=DEFAULT_SPEED) -> Tuple[bool, bool]:
+        distance = cap_distance(distance)
         distance_m = distance / 100.0
         current_pose = self.client.simGetVehiclePose().position
         target_x = current_pose.x_val - distance_m
@@ -163,6 +164,7 @@ class AirSimWrapper(RobotWrapper):
         return True, distance > SCENE_CHANGE_DISTANCE
 
     def move_left(self, distance: int, speed=DEFAULT_SPEED) -> Tuple[bool, bool]:
+        distance = cap_distance(distance)
         distance_m = distance / 100.0
         current_pose = self.client.simGetVehiclePose().position
         target_y = current_pose.y_val + distance_m
@@ -172,6 +174,7 @@ class AirSimWrapper(RobotWrapper):
         return True, distance > SCENE_CHANGE_DISTANCE
 
     def move_right(self, distance: int, speed=DEFAULT_SPEED) -> Tuple[bool, bool]:
+        distance = cap_distance(distance)
         distance_m = distance / 100.0
         current_pose = self.client.simGetVehiclePose().position
         target_y = current_pose.y_val - distance_m
@@ -181,6 +184,7 @@ class AirSimWrapper(RobotWrapper):
         return True, distance > SCENE_CHANGE_DISTANCE
 
     def move_up(self, distance: int, speed=DEFAULT_SPEED) -> Tuple[bool, bool]:
+        distance = cap_distance(distance)
         distance_m = distance / 100.0
         current_pose = self.client.simGetVehiclePose().position
         target_z = current_pose.z_val - distance_m  # AirSim Z is inverted
@@ -188,11 +192,12 @@ class AirSimWrapper(RobotWrapper):
         return True, False
 
     def move_down(self, distance: int, speed=DEFAULT_SPEED) -> Tuple[bool, bool]:
-         distance_m = distance / 100.0
-         current_pose = self.client.simGetVehiclePose().position
-         target_z = current_pose.z_val + distance_m
-         self.client.moveToPositionAsync(current_pose.x_val, current_pose.y_val, target_z, DEFAULT_SPEED).join()
-         return True, False
+        distance = cap_distance(distance)
+        distance_m = distance / 100.0
+        current_pose = self.client.simGetVehiclePose().position
+        target_z = current_pose.z_val + distance_m
+        self.client.moveToPositionAsync(current_pose.x_val, current_pose.y_val, target_z, DEFAULT_SPEED).join()
+        return True, False
 
     def turn_ccw(self, degree: int) -> Tuple[bool, bool]:
         current_orientation = self.client.simGetVehiclePose().orientation
