@@ -24,7 +24,7 @@ class LLMWrapper:
 
         self.deepseek_client = openai.OpenAI(
             base_url='https://api.deepseek.com',
-            api_key='sk-2d9d0f32e6bf4965a0bf998b1e5d5985'
+            api_key='api'
         )
 
     def request(self, prompt, model_name=DEEPSEEK, stream=False, task='typefly') -> str | Stream[ChatCompletion.ChatCompletionChunk]:
